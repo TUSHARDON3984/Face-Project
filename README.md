@@ -1,88 +1,189 @@
-Face Recognition + Tracking Project (OpenCV, 100% free & open source)
-A real-time face detection, recognition, and tracking system built using classical computer vision -- no paid APIs, no cloud services, no GPU required.
+# Personal Assistant Project (Face Recognition, Gestures, Voice Control)
 
-What this uses
-OpenCV (opencv-contrib-python) -- free, open-source, BSD-licensed
-Haar Cascade -- face detector (bundled locally as haarcascade_frontalface_default.xml)
-LBPH (Local Binary Patterns Histogram) -- face recognizer (built into OpenCV's contrib module)
-CSRT Tracker -- object tracker for smooth frame-to-frame tracking (the "tracking" part)
-Project structure
+A multi-modal personal assistant built in Python using 100% free, open-source
+tools -- no paid APIs, no cloud services required. Combines computer vision,
+hand gesture control, voice commands, and text-to-speech into one unified
+assistant with a live GUI dashboard.
 
+## Features
+
+- **Face detection, recognition, and tracking** -- recognizes specific people
+  by name in real time via webcam
+- **Hand gesture control** -- pinch to zoom, open palm/fist for volume,
+  peace sign for play/pause
+- **Voice control with wake word** -- say "hey assistant" followed by a
+  command (open apps, control volume/zoom/playback, search Google, take
+  screenshots, tell the time/date)
+- **Text-to-speech** -- the assistant speaks responses and greetings back
+- **Personalized greetings** -- greets recognized individuals by name
+- **Security gating** -- sensitive voice commands (opening apps, screenshots,
+  searches) only execute if a recognized face is currently in view; unknown
+  faces trigger a spoken stranger alert
+- **Modern GUI dashboard** -- live status indicator and scrolling activity
+  log (built with customtkinter)
+- **Activity logging** -- every recognized face, gesture, and voice command
+  is timestamped and saved to `activity_log.csv`
+
+## Tech stack (all free & open source)
+- **OpenCV (`opencv-contrib-python`)** -- face detection (Haar Cascade),
+  face recognition (LBPH), object tracking (CSRT)
+- **MediaPipe** (Google) -- hand landmark detection for gestures
+- **SpeechRecognition** -- voice command transcription (Google's free
+  speech API, no key needed for personal use)
+- **pyttsx3** -- fully offline text-to-speech
+- **Pycaw** -- Windows system volume control
+- **PyAutoGUI** -- keyboard/zoom simulation and screenshots
+- **customtkinter** -- modern dashboard GUI
+
+## Project structure
+```
 face_project/
-├── requirements.txt
-├── haarcascade_frontalface_default.xml   # face detector data file
-├── 1_capture_faces.py                    # builds dataset/ from your webcam
-├── 2_train_model.py                      # builds trainer/trainer.yml
-├── 3_recognize_and_track.py              # live recognition + tracking
-├── dataset/                              # your face images + labels.csv (gitignored)
-└── trainer/                              # trained model (gitignored)
-Setup
-1. Clone the repo
+├── requirements.txt              # base deps (face recognition only)
+├── requirements_assistant.txt    # full deps (gestures, voice, TTS, GUI)
+├── haarcascade_frontalface_default.xml
+│
+├── 1_capture_faces.py            # Step 1: build face dataset from webcam
+├── 2_train_model.py              # Step 2: train LBPH recognizer
+├── 3_recognize_and_track.py      # Step 3: standalone face recognition + tracking
+├── 4_hand_gesture_control.py     # standalone hand gesture control
+├── 5_speech_control.py           # standalone voice control
+├── 6_assistant_main.py           # unified assistant (all features + GUI)
+│
+├── assistant_tts.py              # text-to-speech engine (thread-safe)
+├── assistant_logger.py           # activity logging (CSV + in-memory)
+├── assistant_state.py            # shared state between threads
+├── assistant_vision.py           # combined face recognition + gestures
+├── assistant_voice.py            # wake-word voice control + commands
+│
+├── dataset/                      # captured face images + labels (gitignored)
+├── trainer/                      # trained face model (gitignored)
+├── screenshots/                  # saved screenshots (gitignored)
+└── activity_log.csv              # generated log of all assistant activity
+```
 
-bash
+## Setup
+
+This project uses **two Python environments**:
+- **Base Python** -- for the simple face recognition scripts (1-3), which
+  only need OpenCV + NumPy
+- **`gesture_env` (Python 3.12 virtual environment)** -- for gestures,
+  voice, TTS, and the unified assistant (4, 5, 6), which need heavier
+  dependencies (MediaPipe, PyAudio, etc.) that work best on a stable,
+  slightly older Python version
+
+### 1. Clone the repo
+```bash
 git clone https://github.com/TUSHARDON3984/Face-Project.git
 cd Face-Project
-2. Install dependencies
+```
 
-bash
+### 2. Set up the base environment (for scripts 1-3)
+```bash
 pip install -r requirements.txt
-Note: if your pip/python command runs a different Python install than the one you intend to use, install directly into it with the full path, e.g.:
+```
 
+### 3. Set up gesture_env (for scripts 4, 5, 6)
+```bash
+py -3.12 -m venv gesture_env
+gesture_env\Scripts\activate      # Windows
+pip install -r requirements_assistant.txt
+```
 
-powershell
-& "C:\Path\To\python.exe" -m pip install -r requirements.txt
-3. Verify OpenCV installed correctly
+> **Note:** `PyAudio` and `mediapipe` can be picky about very new Python
+> versions -- Python 3.12 is the tested, stable choice here. `mediapipe`
+> is pinned to `0.10.14` since newer releases have a known bug breaking
+> the `mp.solutions` API.
 
-bash
-python -c "import cv2; print(cv2.__version__); print(cv2.face.LBPHFaceRecognizer_create())"
-You should see a version number and an LBPHFaceRecognizer object printed with no errors.
+## How to run
 
-How to run (in order)
-Step 1 -- Capture a face dataset
-
-bash
+### Step 1 -- Capture a face dataset
+```bash
 python 1_capture_faces.py
-Enter a numeric ID (e.g. 1) and the person's name.
-Look at the webcam -- it auto-captures face images (move your head slightly, vary your expression, for more robust training data).
-Press q to stop early.
-Repeat this step with a new ID for each additional person you want the system to recognize.
-Step 2 -- Train the recognizer
+```
+Enter a numeric ID and name, look at the webcam. Repeat for each person.
 
-bash
+### Step 2 -- Train the recognizer
+```bash
 python 2_train_model.py
-Builds trainer/trainer.yml from everything in dataset/.
+```
 
-Step 3 -- Run real-time recognition + tracking
-
-bash
+### Step 3 -- Test standalone face recognition (optional)
+```bash
 python 3_recognize_and_track.py
-A webcam window opens:
+```
 
-Green box = recognized face, labeled with the person's name
-Red box = unrecognized / unknown face
-Press q to quit.
+### Run the full unified assistant
+```bash
+gesture_env\Scripts\activate
+python 6_assistant_main.py
+```
 
-How it works (methodology)
-Detection -- Haar Cascade scans each frame for face-like regions.
-Recognition -- Detected faces are resized to a fixed size, histogram- equalized (to normalize lighting), and passed to the LBPH recognizer, which compares local texture patterns against the trained model and returns a confidence score.
-Tracking -- Rather than re-running detection on every frame (slow), a CSRT tracker locks onto the detected face's bounding box and follows it smoothly. Detection + recognition re-run periodically (every DETECT_EVERY_N_FRAMES) to correct any tracker drift.
-This is a classical (non-deep-learning) computer vision pipeline -- fast, CPU-only, and fully explainable line-by-line, making it well suited to an academic project or for understanding CV fundamentals before moving to deep-learning-based approaches (e.g. FaceNet, dlib's CNN detector).
+This opens:
+- A webcam window (face recognition + hand gestures)
+- A dashboard window (status + live activity log)
 
-Configuration knobs
-In 1_capture_faces.py:
+Say **"hey assistant"** followed by a command, e.g.:
+- "hey assistant, open chrome"
+- "hey assistant, open youtube"
+- "hey assistant, volume up" / "volume down"
+- "hey assistant, zoom in" / "zoom out"
+- "hey assistant, play" / "pause"
+- "hey assistant, what time is it" / "what's the date"
+- "hey assistant, search google for [query]"
+- "hey assistant, take a screenshot"
+- "hey assistant, open [any app name]" (dynamic app launch)
+- "hey assistant, stop listening" / "goodbye" (exits)
 
-NUM_SAMPLES -- how many face images to capture per person (default: 60, increase to 150+ for harder cases like visually similar faces/twins)
-In 3_recognize_and_track.py:
+You can also say the wake word and command together in one sentence, e.g.
+"hey assistant open notepad."
 
-CONFIDENCE_THRESHOLD -- LBPH confidence cutoff (lower = stricter match, default: 70; try 50 for fewer false positives)
-DETECT_EVERY_N_FRAMES -- how often to re-run detection vs. relying on the tracker (default: 15)
-Known limitations
-LBPH is a classical algorithm and can struggle to distinguish very similar faces (e.g. identical/close twins) -- accuracy improves with more training samples, varied expressions/angles, and consistent lighting during capture.
-Only the largest detected face is tracked at a time in this version (single-face tracking). Multi-face simultaneous tracking would require looping over all detected faces and maintaining a tracker per face.
-Requires a working local webcam -- this cannot run in a browser or on GitHub's servers; clone and run it locally.
-Troubleshooting
-ModuleNotFoundError: No module named 'cv2' -- you likely have multiple Python installations; install opencv-contrib-python into the same Python interpreter your terminal/IDE is actually running (check with python -c "import sys; print(sys.executable)").
-cv2.error: ... !empty() in function 'CascadeClassifier::detectMultiScale' -- the Haar Cascade XML file wasn't found. Make sure haarcascade_frontalface_default.xml is present in the project folder (already included in this repo).
-Webcam won't open -- close other apps using the camera (Zoom/Teams) and check camera permissions in your OS settings.
-Privacy note
-The dataset/ (face images) and trainer/ (trained model) folders are excluded from version control via .gitignore, since they contain personal biometric data. Each user should generate their own by running Steps 1-2 locally.
+Hand gestures (no voice needed):
+- **Pinch fingers apart/together** -> zoom in/out (works on the focused
+  window, e.g. a browser)
+- **Open palm** (held) -> volume up
+- **Closed fist** (held) -> volume down
+- **Peace sign** -> play/pause (media key)
+
+Press `q` in the webcam window, or click "Quit Assistant" in the
+dashboard, to stop everything.
+
+## Security note
+Commands like opening apps, taking screenshots, and searching are gated
+behind face recognition -- they'll only execute while a recognized face is
+in view. If no recognized face is present, the assistant verbally declines
+and logs a security alert. Prolonged unrecognized faces also trigger a
+spoken stranger warning.
+
+## Known limitations
+- LBPH is a classical (non-deep-learning) algorithm and can struggle to
+  distinguish very similar faces (e.g. identical twins) -- mitigated with
+  more training samples, varied angles/expressions, lighting normalization,
+  and a stricter confidence threshold.
+- Zoom and play/pause simulate keyboard input, so they act on whichever
+  window is currently focused/frontmost.
+- Requires a local webcam and microphone -- this cannot run in a browser or
+  on GitHub's servers; clone and run it locally.
+- Voice recognition depends on Google's free public speech API, so an
+  internet connection is required for voice features.
+
+## Troubleshooting
+- **`ModuleNotFoundError`** -- check you're using the right environment/
+  interpreter for the script you're running (see Setup above).
+- **`cv2.error: ... !empty() in detectMultiScale`** -- the Haar Cascade XML
+  file is missing; make sure `haarcascade_frontalface_default.xml` is in
+  the project folder.
+- **`mp.solutions` AttributeError** -- you likely have a newer, buggy
+  mediapipe version; run `pip install mediapipe==0.10.14`.
+- **pycaw `AttributeError: 'AudioDevice' object has no attribute 'Activate'`**
+  -- newer pycaw versions changed their API; this project already uses the
+  current `device.EndpointVolume` pattern.
+- **TTS `CoInitialize has not been called`** -- `pyttsx3` needs COM
+  initialized on its worker thread; already handled via `pythoncom.CoInitialize()`
+  in `assistant_tts.py`.
+- **Webcam won't open** -- close other apps using the camera (Zoom/Teams)
+  and check camera permissions in Windows settings.
+
+## Privacy note
+`dataset/`, `trainer/`, and `screenshots/` are excluded from version control
+via `.gitignore`, since they contain personal biometric data and screen
+captures. Each user should generate their own by running Steps 1-2 locally.
