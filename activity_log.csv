@@ -1,0 +1,61 @@
+timestamp,event_type,details
+2026-07-06 16:21:54,Face Recognized,Tushar Singh
+2026-07-06 16:22:06,Stranger Alert,Unrecognized face in frame
+2026-07-06 16:22:08,Gesture,Zooming Out
+2026-07-06 16:22:09,Gesture,Play/Pause
+2026-07-06 16:22:10,Gesture,Play/Pause
+2026-07-06 16:22:13,Gesture,Zooming Out
+2026-07-06 16:22:16,Gesture,Play/Pause
+2026-07-06 16:22:17,Gesture,Play/Pause
+2026-07-06 16:22:18,Gesture,Play/Pause
+2026-07-06 16:22:19,Gesture,Play/Pause
+2026-07-06 16:22:55,Face Recognized,Tushar Singh
+2026-07-06 16:22:59,Stranger Alert,Unrecognized face in frame
+2026-07-06 16:23:55,Face Recognized,Tushar Singh
+2026-07-06 16:24:08,Stranger Alert,Unrecognized face in frame
+2026-07-06 16:33:42,Face Recognized,Tushar Singh
+2026-07-06 16:34:07,Gesture,Zooming Out
+2026-07-06 16:34:25,Gesture,Zooming Out
+2026-07-06 16:34:26,Gesture,Zooming In
+2026-07-06 16:34:29,Gesture,Zooming Out
+2026-07-06 16:34:30,Gesture,Zooming In
+2026-07-06 16:34:40,Gesture,Zooming In
+2026-07-06 16:34:40,Gesture,Zooming In
+2026-07-06 16:34:41,Gesture,Play/Pause
+2026-07-06 16:34:42,Face Recognized,Tushar Singh
+2026-07-06 16:34:43,Gesture,Play/Pause
+2026-07-06 16:34:44,Gesture,Play/Pause
+2026-07-07 10:17:17,Face Recognized,Tushar Singh
+2026-07-07 10:18:17,Face Recognized,Tushar Singh
+2026-07-07 10:24:51,Face Recognized,Tushar Singh
+2026-07-07 10:33:31,Face Recognized,Tushar Singh
+2026-07-07 10:34:09,Voice Command,Open Notepad
+2026-07-07 10:34:31,Face Recognized,Tushar Singh
+2026-07-07 10:35:25,Gesture,Zooming Out
+2026-07-07 10:35:30,Gesture,Zooming Out
+2026-07-07 10:35:31,Face Recognized,Tushar Singh
+2026-07-07 10:35:32,Gesture,Play/Pause
+2026-07-07 10:35:33,Gesture,Play/Pause
+2026-07-07 10:36:17,Gesture,Play/Pause
+2026-07-07 10:36:29,Gesture,Zooming In
+2026-07-07 10:36:31,Gesture,Zooming Out
+2026-07-07 10:36:31,Face Recognized,Tushar Singh
+2026-07-07 10:36:32,Gesture,Zooming In
+2026-07-07 10:36:34,Gesture,Zooming Out
+2026-07-07 10:36:34,Gesture,Zooming Out
+2026-07-07 10:50:35,Face Recognized,Tushar Singh
+2026-07-07 10:50:37,Voice Command,Open YouTube
+2026-07-07 10:51:11,Gesture,Zooming Out
+2026-07-07 10:51:13,Gesture,Zooming Out
+2026-07-07 10:51:16,Gesture,Play/Pause
+2026-07-07 10:51:17,Gesture,Play/Pause
+2026-07-07 10:51:18,Gesture,Play/Pause
+2026-07-07 10:51:19,Gesture,Play/Pause
+2026-07-07 10:51:20,Gesture,Play/Pause
+2026-07-07 10:51:23,Gesture,Play/Pause
+2026-07-07 10:51:27,Gesture,Zooming In
+2026-07-07 10:51:30,Gesture,Zooming Out
+2026-07-07 10:51:31,Gesture,Zooming Out
+2026-07-07 10:51:32,Gesture,Play/Pause
+2026-07-07 10:51:35,Face Recognized,Tushar Singh
+2026-07-07 10:52:05,Face Recognized,Vaibhav Singh

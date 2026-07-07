@@ -1,0 +1,6 @@
+﻿gesture_env/
+dataset/
+trainer/
+screenshots/
+__pycache__/
+*.pyc
